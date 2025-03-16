@@ -1,0 +1,29 @@
+chat_ai.admin_config_system:
+  title: Chat AI
+  route_name: chat_ai.settings
+  parent: system.admin_config
+  description: "Configure Chat AI settings, embeddings and more."
+chat_ai.keys:
+  title: "API Keys"
+  description: "Configure API Keys and endpoints."
+  parent: chat_ai.admin_config_system
+  route_name: chat_ai.keys
+  weight: 12
+chat_ai.settings_form:
+  title: "Settings"
+  description: "Configure Chat AI settings."
+  parent: chat_ai.admin_config_system
+  route_name: chat_ai.settings
+  weight: 13
+chat_ai.embeddings_form:
+  title: "Indexing"
+  description: "Configure embeddings for Chat AI."
+  parent: chat_ai.admin_config_system
+  route_name: chat_ai.embeddings
+  weight: 14
+chat_ai.file_embeddings_form:
+  title: "Custom knowledge"
+  description: "Add custom knowledge to your chatbot"
+  parent: chat_ai.admin_config_system
+  route_name: chat_ai.file_embeddings
+  weight: 15

@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Chat AI module.
+ */
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function chat_ai_help($route_name, RouteMatchInterface $route_match) {
+
+  switch ($route_name) {
+    case 'help.page.chat_ai':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Chat AI module provides a chat bot that can answer questions based on your website content. Allows visitors to interact with your website in natural language.</p>');
+      $output .= '<p>' . t('Is its based on <a href="https://platform.openai.com">Open AI API</a> and <a href="https://supabase.com">Supabase</a> as vector store provider.</p>');
+      $output .= '<p>' . t('Before using this module you have to setup a new Supabase project. </p>');
+      $output .= '<p>' . t('Please check the full installation instructions on the <a href="">module\'s repository page</a>.');
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function chat_ai_theme() {
+  return [
+    'block__chat_ai' => [
+      'render element' => 'elements',
+      'template' => 'block--chat-ai',
+      'base hook' => 'block',
+    ],
+  ];
+}
+
+/**i
+ * Implements hook_entity_insert().
+ */
+function chat_ai_entity_insert(EntityInterface $entity) {
+  $embeddings = \Drupal::service('chat_ai.embeddings');
+  $shouldIndex = $entity instanceof ContentEntityInterface
+    ? $embeddings->shouldIndex($entity) : NULL;
+
+  if ($shouldIndex) {
+    $embeddings->insertDatabaseEmbedding($entity);
+    $embeddings->insertToQueue($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function chat_ai_entity_update(EntityInterface $entity) {
+  $embeddings = \Drupal::service('chat_ai.embeddings');
+  $shouldIndex = $entity instanceof ContentEntityInterface && $embeddings->shouldIndex($entity);
+  if ($shouldIndex) {
+    $embeddings->insertDatabaseEmbedding($entity);
+    $embeddings->insertToQueue($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function chat_ai_entity_delete(EntityInterface $entity) {
+  $embeddings = \Drupal::service('chat_ai.embeddings');
+  $shouldIndex = $entity instanceof ContentEntityInterface
+    ? $embeddings->shouldIndex($entity) : NULL;
+  if ($shouldIndex) {
+    $embeddings->clearIndexedDataByEntity($entity);
+  }
+}
+
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function chat_ai_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+
+  if ($entity_type->id() === 'file') {
+    $fields['ai_indexed'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('AI indexed'))
+      ->setDescription(t('Indicates whether the file is indexed for use with the AI chatbot.'))
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+      ])
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayOptions('view', [
+        'type' => 'boolean',
+        'label' => 'inline',
+        'settings' => [
+          'format' => 'yes-no',
+        ],
+      ])
+      ->setDisplayConfigurable('view', FALSE);
+  }
+
+  return $fields;
+}
+
+
+
+/**
+ * Implements hook_page_attachments().
+ */
+function chat_ai_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'chat_ai/chat_ui';
+}

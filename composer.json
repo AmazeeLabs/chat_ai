@@ -1,0 +1,34 @@
+{
+    "name": "drupal/chat_ai",
+    "description": "A chatbot that can answer questions based on your website content.",
+    "keywords": [
+        "openai",
+        "GPT-3",
+        "AI content",
+        "gpt"
+    ],
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Dimitris Spachos",
+            "homepage": "http://drupal.org/u/dspachos",
+            "role": "Maintainer"
+        }
+    ],
+    "require": {
+        "openai-php/client": "^v0.10",
+        "php-http/guzzle6-adapter": "^2.0",
+        "http-interop/http-factory-guzzle": "^1.2",
+        "masterminds/html5": "^2.7",
+        "league/commonmark": "^2.0",
+        "league/html-to-markdown": "^5.0",
+        "theodo-group/llphant": "^0.9",
+        "stevebauman/hypertext": "^1.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

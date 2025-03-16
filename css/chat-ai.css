@@ -1,0 +1,96 @@
+/* Chat AI related CSS */
+
+#edit-chat-container {
+  font-size: 0.8em;
+  min-height: 380px;
+  max-height: 384px;
+  overflow-y: scroll;
+  padding: 12px;
+}
+
+.chat-gpt {
+  text-align: left;
+  margin-left: 24px;
+  padding: 16px;
+  background-color: #e5e7eb;
+  border-radius: 10px;
+}
+
+.chat-ai--progress {
+  width: 100%;
+}
+
+.chat-ai--progress progress {
+  height: 24px;
+  width: 100%;
+}
+
+.chat-ai--icon {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 22px;
+  right: 22px;
+  background-color: #6875f5;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #6875f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+}
+
+.block--chat-ai-floating {
+  background-color: #fcfcfc;
+  padding: 0px;
+  position: fixed !important;
+  width: 440px;
+  height: 620px;
+  bottom: 120px;
+  right: 10px;
+  box-shadow: -8px 8px 8px #6b7280;
+  z-index: 99;
+}
+
+.block--chat-ai-floating .chat-ai--heading {
+  background-color: #6b7280;
+  color: #fff;
+  padding: 12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  min-height: 64px;
+}
+
+.chat-ai--heading h3 {
+  color: #fff;
+  float: left;
+  margin: 0px;
+  padding: 0px;
+}
+
+.chat-ai--close-icon--container {
+  float: right;
+}
+
+.chat-ai--close-icon--container a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#chat-ai-block>div.js-form-item.form-item.js-form-type-textfield.form-item-message.js-form-item-message.form-no-label {
+  margin: 4px;
+}
+
+.block--chat-ai-floating .chat-ai--send-button {
+  float: right;
+  background-color: #6b7280 !important;
+  border: 0px !important;
+  color: #fff;
+}
+
+.chat--footter {
+  position: absolute;
+  bottom: -12px;
+}
