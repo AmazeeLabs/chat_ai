@@ -1,0 +1,20 @@
+chat_ai.keys.local:
+  route_name: chat_ai.keys
+  title: "API Keys"
+  base_route: chat_ai.settings
+  weight: 1
+chat_ai.settings.local:
+  route_name: chat_ai.settings
+  title: "Settings"
+  base_route: chat_ai.settings
+  weight: 2
+chat_ai.embeddings.local:
+  route_name: chat_ai.embeddings
+  title: "Indexing"
+  base_route: chat_ai.settings
+  weight: 3
+chat_ai.file.embeddings.local:
+  route_name: chat_ai.file_embeddings
+  title: "Custom knowledge"
+  base_route: chat_ai.settings
+  weight: 4

@@ -1,0 +1,11 @@
+name: Chat AI
+type: module
+description: 'Provide a chatbot that can answer questions based on your website content.'
+package: Custom
+configure: chat_ai.keys
+core_version_requirement: ^9 || ^10
+
+# Information added by Drupal.org packaging script on 2023-06-20
+version: '1.0.0-alpha1+6-dev'
+project: 'chat_ai'
+datestamp: 1687274887

@@ -1,0 +1,30 @@
+# Composer
+/vendor
+
+# Drupal
+/.editorconfig
+/.gitattributes
+/web/*
+!/web/modules
+!/web/themes
+/web/modules/*
+/web/themes/*
+!/web/modules/custom
+!/web/themes/custom
+
+# Lagoon integrations
+/drush
+/.drush-lock-update
+
+# Silverback
+/.env.local
+/.env.local.example
+/.envrc
+/.silverback-snapshots
+.phpunit.result.cache
+
+# GraphQL persisted operation map
+generated/operations.json
+
+# Translations from the FE
+generated/translations.json

@@ -1,0 +1,176 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Chat AI module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function chat_ai_install() {
+  // @todo
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function chat_ai_uninstall() {
+  // @todo
+  \Drupal::database()->schema()->dropTable('chat_ai_embeddings');
+  \Drupal::database()->schema()->dropTable('chat_ai_history');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function chat_ai_schema() {
+
+  $schema['chat_ai_embeddings'] = [
+    'description' => 'Stores embedding data from OpenAI.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'created' => [
+        'description' => 'The timestamp of the record.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_type' => [
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+      'bundle' => [
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+      'langcode' => [
+        'type' => 'varchar_ascii',
+        'length' => '12',
+        'not null' => TRUE,
+        'description' => 'The langcode of the item.',
+        'default' => '',
+      ],
+      'indexed' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'If the item is indexed or no.',
+      ],
+      'in_queue' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Item exist in queue and will be indexed in next cron.',
+      ],
+      'metadata' => [
+        'type' => 'varchar',
+        'length' => 4096,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Embedding metadata. IDs from the vector database in serialized json format.',
+      ],
+      'prompt_tokens' => [
+        'description' => 'The tokens used for prompt.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'total_tokens' => [
+        'description' => 'The total tokens used.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => [
+      'id',
+    ],
+    'indexes' => [
+      'entity_id' => [
+        'entity_id',
+      ],
+      'entity_type' => [
+        'entity_type',
+      ],
+    ],
+  ];
+
+  $schema['chat_ai_history'] = [
+    'description' => 'Stores Chat AI history.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The unique ID.',
+      ],
+      'created' => [
+        'description' => 'The timestamp of the record.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'uid' => [
+        'description' => 'The uid of the user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'user_query' => [
+        'description' => 'The query of the user.',
+        'type' => 'varchar',
+        'length' => 2048,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'chat_response' => [
+        'type' => 'text',
+        'description' => 'The response of the chat bot.',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ],
+      'prompt_tokens' => [
+        'type' => 'int',
+        'description' => 'The tokens used for prompt.',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'total_tokens' => [
+        'type' => 'int',
+        'description' => 'The total tokens used.',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => [
+      'id',
+    ],
+    'indexes' => [
+      'user_query' => [
+        'user_query',
+      ],
+    ],
+  ];
+
+  return $schema;
+}

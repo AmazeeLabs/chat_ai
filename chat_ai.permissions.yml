@@ -1,0 +1,4 @@
+administer chat_ai configuration:
+  title: 'Administer Chat AI configuration'
+  description: 'Includes also indexing, api-keys and more.'
+  restrict access: true

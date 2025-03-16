@@ -1,0 +1,56 @@
+chat_ai.keys:
+  path: "/admin/config/system/chat-ai/keys"
+  defaults:
+    _title: "API Keys"
+    _form: 'Drupal\chat_ai\Form\ApiKeysSettingsForm'
+  requirements:
+    _permission: "administer chat_ai configuration"
+chat_ai.embeddings:
+  path: "/admin/config/system/chat-ai/embeddings"
+  defaults:
+    _title: "Indexing"
+    _form: 'Drupal\chat_ai\Form\EmbeddingsForm'
+  requirements:
+    _permission: "administer chat_ai configuration"
+chat_ai.settings:
+  path: "/admin/config/system/chat-ai/settings"
+  defaults:
+    _title: "Settings"
+    _form: 'Drupal\chat_ai\Form\SettingsForm'
+  requirements:
+    _permission: "administer chat_ai configuration"
+chat_ai.clear_index_confirm:
+  path: "/chat-ai/clear-index-confirm"
+  defaults:
+    _title: "Clear all indexed data"
+    _form: 'Drupal\chat_ai\Form\ClearIndexConfirmForm'
+  requirements:
+    _permission: "administer chat_ai configuration"
+
+chat_ai.file_embeddings:
+  path: "/admin/config/system/chat-ai/file-embeddings"
+  defaults:
+    _title: "Custom knowledge"
+    _form: 'Drupal\chat_ai\Form\FileEmbeddingsForm'
+  requirements:
+    _permission: "administer chat_ai configuration&#039;"
+
+chat_ai.clear_file_embedding_confirm:
+  path: "/chat-ai/clear-file-confirm/{file}"
+  defaults:
+    _title: "Clear all indexed data"
+    _form: 'Drupal\chat_ai\Form\RemoveFileEmbeddingConfirmForm'
+  requirements:
+    _permission: "administer chat_ai configuration"
+  options:
+    parameters:
+      file:
+        type: entity:file
+
+chat_ai.completion:
+  path: "/chat/completion"
+  defaults:
+    _controller: '\Drupal\chat_ai\Controller\ChatCompletionController::complete'
+  methods: [POST]
+  requirements:
+    _permission: "access content"

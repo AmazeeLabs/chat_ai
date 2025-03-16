@@ -1,0 +1,51 @@
+services:
+  chat_ai.event_subscriber:
+    class: Drupal\chat_ai\EventSubscriber\ChatAiSubscriber
+    arguments: ["@messenger"]
+    tags:
+      - { name: event_subscriber }
+  open_ai.client_factory:
+    class: Drupal\chat_ai\Http\OpenAiClientFactory
+    arguments: ["@config.factory"]
+  chat_ai.service:
+    class: Drupal\chat_ai\ChatAI
+    arguments:
+      [
+        "@open_ai.client_factory",
+        "@entity_type.manager",
+        "@current_user",
+        "@logger.factory",
+        "@database",
+        "@chat_ai.supabase",
+        "@config.factory",
+      ]
+  chat_ai.embeddings:
+    class: Drupal\chat_ai\Embeddings
+    arguments:
+      [
+        "@open_ai.client_factory",
+        "@entity_type.manager",
+        "@current_user",
+        "@logger.factory",
+        "@database",
+        "@chat_ai.supabase",
+        "@config.factory",
+      ]
+  chat_ai.supabase:
+    class: Drupal\chat_ai\Supabase
+    arguments:
+      [
+        "@entity_type.manager",
+        "@logger.factory",
+        "@config.factory",
+        "@open_ai.client_factory",
+        "@current_route_match",
+        "@current_user",
+        "@supabase.client_factory",
+      ]
+  supabase.client_factory:
+    class: Drupal\chat_ai\Http\SupabaseClientFactory
+    arguments: ["@config.factory"]
+  chat_ai.content_fetcher:
+    class: Drupal\chat_ai\ContentFetcher
+    arguments: ["@http_client", "@logger.factory"]
