@@ -1,23 +1,23 @@
 // chat.js
 (function () {
   // Create chat container (initially hidden)
-  const chatContainer = document.createElement('div');
-  chatContainer.className = 'grok-chat-container';
-  chatContainer.style.display = 'none';
+  const chatContainer = document.createElement("div");
+  chatContainer.className = "grok-chat-container";
+  chatContainer.style.display = "none";
 
   // Default language
-  let currentLanguage = 'EN';
+  let currentLanguage = "EN";
 
   // Load chat history from localStorage or initialize empty array
-  let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+  let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
 
   // Chat HTML structure with language toggle
   chatContainer.innerHTML = `
         <div class="chat-header">
             <span>✨</span>
             <div class="language-toggle">
-                <span class="lang-option ${currentLanguage === 'EN' ? 'active' : ''}" data-lang="EN">EN</span>
-                <span class="lang-option ${currentLanguage === 'DE' ? 'active' : ''}" data-lang="DE">DE</span>
+                <span class="lang-option ${currentLanguage === "EN" ? "active" : ""}" data-lang="EN">EN</span>
+                <span class="lang-option ${currentLanguage === "DE" ? "active" : ""}" data-lang="DE">DE</span>
             </div>
             <span class="close-btn">[X]</span>
         </div>
@@ -33,7 +33,7 @@
         </div>
     `;
 
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
         .grok-chat-container {
             position: fixed;
@@ -189,10 +189,10 @@
     `;
 
   // Create chat icon (visible by default)
-  const chatIcon = document.createElement('div');
-  chatIcon.className = 'chat-icon';
-  chatIcon.textContent = '💬';
-  chatIcon.style.display = 'flex';
+  const chatIcon = document.createElement("div");
+  chatIcon.className = "chat-icon";
+  chatIcon.textContent = "💬";
+  chatIcon.style.display = "flex";
 
   // Append elements to document
   document.head.appendChild(style);
@@ -200,26 +200,26 @@
   document.body.appendChild(chatIcon);
 
   // Get DOM elements
-  const chatMessages = chatContainer.querySelector('.chat-messages');
-  const chatInput = chatContainer.querySelector('.chat-input');
-  const sendBtn = chatContainer.querySelector('.send-btn');
-  const closeBtn = chatContainer.querySelector('.close-btn');
-  const clearBtn = chatContainer.querySelector('.clear-btn');
-  const langOptions = chatContainer.querySelectorAll('.lang-option');
+  const chatMessages = chatContainer.querySelector(".chat-messages");
+  const chatInput = chatContainer.querySelector(".chat-input");
+  const sendBtn = chatContainer.querySelector(".send-btn");
+  const closeBtn = chatContainer.querySelector(".close-btn");
+  const clearBtn = chatContainer.querySelector(".clear-btn");
+  const langOptions = chatContainer.querySelectorAll(".lang-option");
 
   // Function to load chat history when opening the chat
   function loadChatHistory() {
-    chatMessages.innerHTML = ''; // Clear existing messages
+    chatMessages.innerHTML = ""; // Clear existing messages
     chatHistory.forEach((chat) => {
       // Add user message
-      const userMessage = document.createElement('div');
-      userMessage.classList.add('message', 'user-message');
+      const userMessage = document.createElement("div");
+      userMessage.classList.add("message", "user-message");
       userMessage.textContent = chat.user_message;
       chatMessages.appendChild(userMessage);
 
       // Add system response
-      const systemMessage = document.createElement('div');
-      systemMessage.classList.add('message', 'system-message');
+      const systemMessage = document.createElement("div");
+      systemMessage.classList.add("message", "system-message");
       systemMessage.innerHTML = chat.system_response;
       chatMessages.appendChild(systemMessage);
     });
@@ -232,35 +232,35 @@
   }
 
   function initChat() {
-    const welcomeMessage = document.createElement('div');
-    welcomeMessage.classList.add('message', 'system-message');
+    const welcomeMessage = document.createElement("div");
+    welcomeMessage.classList.add("message", "system-message");
     welcomeMessage.textContent =
-      currentLanguage === 'EN'
-        ? 'Hello! How can I assist you today?'
-        : 'Hallo! Wie kann ich Ihnen heute helfen?';
+      currentLanguage === "EN"
+        ? "Hello! How can I assist you today?"
+        : "Hallo! Wie kann ich Ihnen heute helfen?";
     chatMessages.appendChild(welcomeMessage);
   }
 
   // Function to clear chat history
   function clearChatHistory() {
     chatHistory = [];
-    localStorage.removeItem('chatHistory');
-    chatMessages.innerHTML = '';
+    localStorage.removeItem("chatHistory");
+    chatMessages.innerHTML = "";
     initChat();
   }
 
   // Language toggle event listener
   langOptions.forEach((option) => {
-    option.addEventListener('click', () => {
-      langOptions.forEach((opt) => opt.classList.remove('active'));
-      option.classList.add('active');
+    option.addEventListener("click", () => {
+      langOptions.forEach((opt) => opt.classList.remove("active"));
+      option.classList.add("active");
       currentLanguage = option.dataset.lang;
-      const welcomeMessage = chatMessages.querySelector('.system-message');
+      const welcomeMessage = chatMessages.querySelector(".system-message");
       if (welcomeMessage) {
         welcomeMessage.textContent =
-          currentLanguage === 'EN'
-            ? 'Hello! How can I assist you today?'
-            : 'Hallo! Wie kann ich Ihnen heute helfen?';
+          currentLanguage === "EN"
+            ? "Hello! How can I assist you today?"
+            : "Hallo! Wie kann ich Ihnen heute helfen?";
       }
     });
   });
@@ -268,50 +268,50 @@
   // Event Listeners
 
   // Clear button event listener
-  clearBtn.addEventListener('click', () => {
+  clearBtn.addEventListener("click", () => {
     clearChatHistory();
   });
 
-  chatIcon.addEventListener('click', () => {
-    chatContainer.style.display = 'flex';
-    chatIcon.style.display = 'none';
+  chatIcon.addEventListener("click", () => {
+    chatContainer.style.display = "flex";
+    chatIcon.style.display = "none";
     chatInput.focus();
     loadChatHistory(); // Load history when opening chat
   });
 
-  closeBtn.addEventListener('click', () => {
-    chatContainer.style.display = 'none';
-    chatIcon.style.display = 'flex';
+  closeBtn.addEventListener("click", () => {
+    chatContainer.style.display = "none";
+    chatIcon.style.display = "flex";
   });
 
   // ESC to close chat
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && chatContainer.style.display === 'flex') {
-      chatContainer.style.display = 'none';
-      chatIcon.style.display = 'flex';
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && chatContainer.style.display === "flex") {
+      chatContainer.style.display = "none";
+      chatIcon.style.display = "flex";
     }
   });
 
   // CTRL+I to open chat
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'i') {
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key === "i") {
       e.preventDefault();
-      chatContainer.style.display = 'flex';
-      chatIcon.style.display = 'none';
+      chatContainer.style.display = "flex";
+      chatIcon.style.display = "none";
       chatInput.focus();
       loadChatHistory(); // Load history when opening chat
     }
   });
 
-  chatInput.addEventListener('input', function () {
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
+  chatInput.addEventListener("input", function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
   });
 
-  sendBtn.addEventListener('click', sendMessage);
+  sendBtn.addEventListener("click", sendMessage);
 
-  chatInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  chatInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
@@ -321,15 +321,15 @@
     const message = chatInput.value.trim();
     if (message) {
       // Add user message to DOM
-      const userMessage = document.createElement('div');
-      userMessage.classList.add('message', 'user-message');
+      const userMessage = document.createElement("div");
+      userMessage.classList.add("message", "user-message");
       userMessage.textContent = message;
       chatMessages.appendChild(userMessage);
 
       // Add loading dots
-      const loadingMessage = document.createElement('div');
-      loadingMessage.classList.add('message', 'system-message');
-      loadingMessage.textContent = '...';
+      const loadingMessage = document.createElement("div");
+      loadingMessage.classList.add("message", "system-message");
+      loadingMessage.textContent = "...";
       chatMessages.appendChild(loadingMessage);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -337,59 +337,63 @@
       let dotCount = 0;
       const dotInterval = setInterval(() => {
         dotCount = (dotCount + 1) % 4;
-        loadingMessage.textContent = '.'.repeat(dotCount + 1);
+        loadingMessage.textContent = ".".repeat(dotCount + 1);
       }, 500);
 
       // Clear input
-      chatInput.value = '';
-      chatInput.style.height = 'auto';
+      chatInput.value = "";
+      chatInput.style.height = "auto";
 
       try {
-        const response = await fetch('http://127.0.0.1:8888/chat/completion', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        // @temp
+        const response = await fetch(
+          "https://backend.dev.paraplegie.ch/chat/completion",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: message,
+              langcode: currentLanguage.toLowerCase(),
+            }),
           },
-          body: JSON.stringify({
-            message: message,
-            langcode: currentLanguage.toLowerCase(),
-          }),
-        });
+        );
 
         clearInterval(dotInterval);
         chatMessages.removeChild(loadingMessage);
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
-        const systemMessage = document.createElement('div');
-        systemMessage.classList.add('message', 'system-message');
-        systemMessage.innerHTML = data.answer || 'No response received';
+        const systemMessage = document.createElement("div");
+        systemMessage.classList.add("message", "system-message");
+        systemMessage.innerHTML = data.answer || "No response received";
         chatMessages.appendChild(systemMessage);
 
         // @todo extract this to method
         // Store in chat history
         chatHistory.push({
           user_message: message,
-          system_response: data.answer || 'No response received',
+          system_response: data.answer || "No response received",
         });
         if (chatHistory.length > 5) {
           chatHistory.shift();
         }
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
         // End Store in chat history
       } catch (error) {
         clearInterval(dotInterval);
         chatMessages.removeChild(loadingMessage);
 
-        const systemMessage = document.createElement('div');
-        systemMessage.classList.add('message', 'system-message');
+        const systemMessage = document.createElement("div");
+        systemMessage.classList.add("message", "system-message");
         systemMessage.textContent =
-          currentLanguage === 'EN'
-            ? 'There was an error with your request.'
-            : 'Es gab einen Fehler bei Ihrer Anfrage.';
+          currentLanguage === "EN"
+            ? "There was an error with your request."
+            : "Es gab einen Fehler bei Ihrer Anfrage.";
         chatMessages.appendChild(systemMessage);
 
         // @todo extract this to method
@@ -397,14 +401,14 @@
         chatHistory.push({
           user_message: message,
           system_response:
-            currentLanguage === 'EN'
-              ? 'There was an error with your request.'
-              : 'Es gab einen Fehler bei Ihrer Anfrage.',
+            currentLanguage === "EN"
+              ? "There was an error with your request."
+              : "Es gab einen Fehler bei Ihrer Anfrage.",
         });
         if (chatHistory.length > 5) {
           chatHistory.shift();
         }
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
         // End Store in chat history
       }
 
