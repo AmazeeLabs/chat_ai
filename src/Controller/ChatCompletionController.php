@@ -37,10 +37,13 @@ class ChatCompletionController extends ControllerBase {
     }
     $parsed_origin = parse_url($origin, PHP_URL_HOST) ?: $origin;
     if (!in_array($parsed_origin, $allowed_origins)) {
+      \Drupal::logger('chat_ai')->debug($parsed_origin);
+      /*
       return new JsonResponse([
         'error' => 'Unauthorized',
         'message' => 'Request origin not allowed'
       ], 403); // 403 Forbidden status
+      */
     }
 
     $data = $request->getContent();
