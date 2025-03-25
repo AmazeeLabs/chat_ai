@@ -22,6 +22,7 @@ class ChatCompletionController extends ControllerBase {
    */
   public function complete(Request $request) {
 
+    global $base_url;
     $this->config('chat_ai.settings');
 
     global $base_url;
@@ -29,7 +30,6 @@ class ChatCompletionController extends ControllerBase {
       '127.0.0.1',
       'localhost',
       $base_url,
-      // getenv('PRODUCTION_URL')
     ];
     $origin = $request->headers->get('Origin');
 
