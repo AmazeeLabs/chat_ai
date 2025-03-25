@@ -29,7 +29,7 @@ class ChatCompletionController extends ControllerBase {
     $allowed_origins = [
       '127.0.0.1',
       'localhost',
-      $base_url,
+      parse_url($base_url, PHP_URL_HOST),
     ];
     $origin = $request->headers->get('Origin');
 
