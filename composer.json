@@ -1,6 +1,7 @@
 {
     "name": "drupal/chat_ai",
     "description": "A chatbot that can answer questions based on your website content.",
+    "version": "1.0.0-dev",
     "keywords": [
         "openai",
         "GPT-3",
