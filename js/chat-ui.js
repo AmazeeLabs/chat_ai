@@ -214,13 +214,13 @@
       // Add user message
       const userMessage = document.createElement("div");
       userMessage.classList.add("message", "user-message");
-      userMessage.textContent = chat.user_message;
+      userMessage.textContent = chat.user;
       chatMessages.appendChild(userMessage);
 
       // Add system response
       const systemMessage = document.createElement("div");
       systemMessage.classList.add("message", "system-message");
-      systemMessage.innerHTML = chat.system_response;
+      systemMessage.innerHTML = chat.assistant;
       chatMessages.appendChild(systemMessage);
     });
 
@@ -377,8 +377,8 @@
         // @todo extract this to method
         // Store in chat history
         chatHistory.push({
-          user_message: message,
-          system_response: data.answer || "No response received",
+          user: message,
+          assistant: data.answer || "No response received",
         });
         if (chatHistory.length > 5) {
           chatHistory.shift();
@@ -397,15 +397,6 @@
             : "Es gab einen Fehler bei Ihrer Anfrage.";
         chatMessages.appendChild(systemMessage);
 
-        // @todo extract this to method
-        // Store error in chat history
-        chatHistory.push({
-          user_message: message,
-          system_response:
-            currentLanguage === "EN"
-              ? "There was an error with your request."
-              : "Es gab einen Fehler bei Ihrer Anfrage.",
-        });
         if (chatHistory.length > 5) {
           chatHistory.shift();
         }

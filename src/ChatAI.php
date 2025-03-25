@@ -144,18 +144,33 @@ class ChatAI {
     EOD;
     $model = $this->configFactory->get('chat_ai.settings')->get('model') ?: self::DEFAULT_CHAT_MODEL;
 
+    $messages[] = [
+      'role' => 'system',
+      'content' => $context,
+    ];
+
+    if (!empty($history)) {
+      foreach ($history as $history_item) {
+        $messages[] = [
+          'role' => 'user',
+          'content' => $history_item['user'],
+        ];
+
+        $messages[] = [
+          'role' => 'assistant',
+          'content' => $history_item['assistant'],
+        ];
+      }
+    }
+
+    $messages[] = [
+      'role' => 'user',
+      'content' => $question,
+    ];
+
     $response = $this->client->chat()->create([
       'model' => $model,
-      'messages' => [
-        [
-          'role' => 'system',
-          'content' => $context,
-        ],
-        [
-          'role' => 'user',
-          'content' => $question,
-        ],
-      ],
+      'messages' => $messages,
     ]);
 
     $choices = [];
