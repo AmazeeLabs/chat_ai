@@ -140,7 +140,7 @@ class ChatAI {
     """
     Answer questions under the given context.
     Respond only in {$language} language.
-    Use simple HTML in your response.
+    Format your responses using simple HTML (no markdown formatting or code blocks).
     EOD;
     $model = $this->configFactory->get('chat_ai.settings')->get('model') ?: self::DEFAULT_CHAT_MODEL;
 

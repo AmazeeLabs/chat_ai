@@ -22,6 +22,8 @@ class ChatCompletionController extends ControllerBase {
    */
   public function complete(Request $request) {
 
+    $this->config('chat_ai.settings');
+
     global $base_url;
     $allowed_origins = [
       '127.0.0.1',
@@ -38,12 +40,10 @@ class ChatCompletionController extends ControllerBase {
     $parsed_origin = parse_url($origin, PHP_URL_HOST) ?: $origin;
     if (!in_array($parsed_origin, $allowed_origins)) {
       \Drupal::logger('chat_ai')->debug($parsed_origin);
-      /*
       return new JsonResponse([
         'error' => 'Unauthorized',
         'message' => 'Request origin not allowed'
       ], 403); // 403 Forbidden status
-      */
     }
 
     $data = $request->getContent();

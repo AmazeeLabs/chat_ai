@@ -2,7 +2,7 @@
 (function () {
   // Create chat container (initially hidden)
   const chatContainer = document.createElement("div");
-  chatContainer.className = "grok-chat-container";
+  chatContainer.className = "chat-ai-chat-container";
   chatContainer.style.display = "none";
 
   // Default language
@@ -35,7 +35,7 @@
 
   const style = document.createElement("style");
   style.textContent = `
-        .grok-chat-container {
+        .chat-ai-chat-container {
             position: fixed;
             width: 720px;
             height: 940px;
@@ -345,9 +345,9 @@
       chatInput.style.height = "auto";
 
       try {
-        // @temp
         const response = await fetch(
-          "https://backend.dev.paraplegie.ch/chat/completion",
+          // @todo: For decoupled websites ?
+          "/chat/completion",
           {
             method: "POST",
             headers: {
@@ -356,6 +356,7 @@
             body: JSON.stringify({
               message: message,
               langcode: currentLanguage.toLowerCase(),
+              history: chatHistory,
             }),
           },
         );
