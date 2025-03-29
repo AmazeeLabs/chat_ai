@@ -1,0 +1,6 @@
+chat_ui.settings_ui:
+  title: "Chat UI"
+  parent: chat_ai.admin_config_system
+  route_name: chat_ui.settings
+  description: "Configure Chat UI settings."
+  weight: 21

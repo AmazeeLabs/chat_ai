@@ -1,5 +1,5 @@
 chat_ai.admin_config_system:
-  title: Chat AI
+  title: "Chat AI"
   route_name: chat_ai.settings
   parent: system.admin_config
   description: "Configure Chat AI settings, embeddings and more."

@@ -118,5 +118,6 @@ function chat_ai_entity_base_field_info(EntityTypeInterface $entity_type) {
  * Implements hook_page_attachments().
  */
 function chat_ai_page_attachments(array &$attachments) {
-  $attachments['#attached']['library'][] = 'chat_ai/chat_ui';
+  // Moved to chat ui submodule.
+  //$attachments['#attached']['library'][] = 'chat_ai/chat_ui';
 }

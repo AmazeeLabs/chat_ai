@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Chat AI module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function chat_ui_page_attachments(array &$attachments) {
+  // Load the configuration.
+  $config = \Drupal::config('chat_ui.settings');
+  $excluded_paths = $config->get('path_pages_exclude');
+
+  // If no excluded paths are defined, attach the library and return early.
+  if (empty($excluded_paths)) {
+    $attachments['#attached']['library'][] = 'chat_ui/chat_ui';
+    return;
+  }
+
+  // Convert the textarea input (one path per line) into an array.
+  $excluded_paths_array = array_filter(array_map('trim', explode("\n", $excluded_paths)));
+
+  // Get the current path.
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+  // Use Drupal's path matcher service to check if the current path matches any excluded paths.
+  $path_matcher = \Drupal::service('path.matcher');
+  $is_excluded = FALSE;
+
+  foreach ($excluded_paths_array as $excluded_path) {
+    if ($path_matcher->matchPath($path_alias, $excluded_path) || $path_matcher->matchPath($current_path, $excluded_path)) {
+      $is_excluded = TRUE;
+      break;
+    }
+  }
+
+  // Attach the library only if the current path is not in the excluded list.
+  if (!$is_excluded) {
+    $attachments['#attached']['library'][] = 'chat_ui/chat_ui';
+  }
+}
