@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Chat AI module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function chat_ui_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'chat_ui/chat_ui';
+}

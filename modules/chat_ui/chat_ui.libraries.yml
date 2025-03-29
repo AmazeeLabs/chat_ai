@@ -1,0 +1,7 @@
+chat_ui:
+  js:
+    js/chat-ui.js: {}
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+    - core/drupal
