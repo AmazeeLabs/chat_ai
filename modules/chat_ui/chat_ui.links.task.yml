@@ -1,5 +1,0 @@
-chat_ui.settings.local:
-  route_name: chat_ui.settings
-  title: "Chat UI"
-  base_route: chat_ai.settings
-  weight: 11

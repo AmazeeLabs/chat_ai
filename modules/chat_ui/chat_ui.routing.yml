@@ -1,7 +1,0 @@
-chat_ui.settings:
-  path: "/admin/config/system/chat-ai/ui"
-  defaults:
-    _title: "Chat UI"
-    _form: 'Drupal\chat_ui\Form\ChatUISettingsForm'
-  requirements:
-    _permission: "administer chat_ai configuration"
