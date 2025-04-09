@@ -38,7 +38,7 @@ class ApiKeysSettingsForm extends ConfigFormBase {
     ];
 
     $form['open_ai']['api_key'] = [
-      '#required' => TRUE,
+      '#required' => FALSE,
       '#type' => 'textarea',
       '#title' => $this->t('API Key'),
       '#default_value' => $this->config('chat_ai.settings')->get('api_key'),
@@ -75,7 +75,7 @@ class ApiKeysSettingsForm extends ConfigFormBase {
     ];
 
     $form['supabase']['supabase_key'] = [
-      '#required' => TRUE,
+      '#required' => FALSE,
       '#type' => 'textarea',
       '#title' => $this->t('Supabase Key'),
       '#default_value' => $this->config('chat_ai.settings')->get('supabase_key'),
@@ -108,8 +108,7 @@ class ApiKeysSettingsForm extends ConfigFormBase {
     try {
       $client = \OpenAI::client($form_state->getValue('api_key'));
       $client->models()->list();
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $this->messenger()->addError($e->getMessage());
       $form_state->setErrorByName('api_key');
     }
@@ -129,5 +128,4 @@ class ApiKeysSettingsForm extends ConfigFormBase {
       ->save();
     parent::submitForm($form, $form_state);
   }
-
 }
