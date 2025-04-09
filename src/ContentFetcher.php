@@ -48,8 +48,7 @@ class ContentFetcher {
   public function fetchContentEntityContent(EntityInterface $entity) {
 
     // @todo Take this from env variaables.
-    // DEVV PRODUCTION_URL=https://dev.paraplegie.ch
-    $base_url = getenv('PRODUCTION_URL') ?: 'https://dev.paraplegie.ch';
+    $base_url = getenv('PRODUCTION_URL');
 
     $url = $base_url . $entity->toUrl()->toString();
     $text = $this->fetchUrl($url);
@@ -116,8 +115,7 @@ class ContentFetcher {
       if ($selector === 'body') {
         $body = $document->getElementsByTagName('body')->item(0);
         $content_node = $body ?? $document->documentElement;
-      }
-      else {
+      } else {
         $xpath = new \DOMXPath($document);
         $nodes = $xpath->query($this->convertSelectorToXpath($selector));
         $content_node = $nodes->length > 0 ? $nodes->item(0) : NULL;
@@ -140,8 +138,7 @@ class ContentFetcher {
       // $transformer->keepLinks(FALSE);
       $text = $transformer->toText($html);
       return $text;
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $this->logger->error('Failed to fetch URL @url: @message', [
         '@url' => $url,
         '@message' => $e->getMessage(),
@@ -188,8 +185,7 @@ class ContentFetcher {
       if ($child instanceof \DOMElement) {
         if (in_array(strtolower($child->tagName), $remove_tags)) {
           $nodes_to_remove[] = $child;
-        }
-        else {
+        } else {
           // Remove class attributes.
           if ($child->hasAttribute('class')) {
             $child->removeAttribute('class');
@@ -214,11 +210,9 @@ class ContentFetcher {
     // Handle basic selectors (excluding 'body' which is handled separately)
     if (strpos($selector, '#') === 0) {
       return "//*[@id='" . substr($selector, 1) . "']";
-    }
-    elseif (strpos($selector, '.') === 0) {
+    } elseif (strpos($selector, '.') === 0) {
       return "//*[contains(@class, '" . substr($selector, 1) . "')]";
     }
     return "//" . $selector;
   }
-
 }
