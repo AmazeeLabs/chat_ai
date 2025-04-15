@@ -10,6 +10,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\chat_ai\Http\OpenAiClientFactory;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Chat AI service.
@@ -17,6 +18,8 @@ use Drupal\chat_ai\Http\OpenAiClientFactory;
 class ChatAI {
 
   private const DEFAULT_CHAT_MODEL = 'gpt-4o-mini';
+
+  use StringTranslationTrait;
 
   /**
    * The open_ai.client service.
@@ -131,11 +134,10 @@ class ChatAI {
 
     $default_response = $this->configFactory->get('chat_ai.settings')->get('default_response') ?: $this->t('I have no idea');
 
-
     $special_prompt_instructions = $this->configFactory->get('chat_ai.settings')->get('special_prompt_instructions') ?: '';
     if (!empty($special_prompt_instructions)) {
       $special_prompt_instructions = <<<EOD
-      Follow this special instructions in your response:
+      Follow these special instructions in your response:
       {$special_prompt_instructions}
       EOD;
     }
@@ -192,46 +194,6 @@ class ChatAI {
     $choices = [];
     foreach ($response->choices as $result) {
       $choices[] = $result->message->content;
-    }
-    return $choices;
-  }
-
-  /**
-   * Generate a completion for the given question under the given context.
-   * Obsolete but check before deleting.
-   *
-   * @param string $question
-   *   The question to generate a completion for.
-   * @param string $context
-   *   The context of the question.
-   *
-   * @return array
-   *   An array of possible completions for the question.
-   */
-  public function completionObsolete(string $question, string $context): array {
-
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getName();
-
-    $prompt = <<<EOD
-    You are a website chat bot. If you are unsure just respond with "I don't know"
-    Context:  """
-    $context
-    """
-    Question: """
-    $question
-    """
-    Answer the question under the given context.
-    Respond only in {$language} language.
-    EOD;
-    $response = $this->client->completions()->create([
-      'model' => 'text-davinci-003',
-      'prompt' => $prompt,
-      'max_tokens' => 240,
-      'temperature' => 0,
-    ]);
-    $choices = [];
-    foreach ($response->choices as $result) {
-      $choices[] = $result->text;
     }
     return $choices;
   }

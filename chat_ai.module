@@ -30,19 +30,6 @@ function chat_ai_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_theme().
- */
-function chat_ai_theme() {
-  return [
-    'block__chat_ai' => [
-      'render element' => 'elements',
-      'template' => 'block--chat-ai',
-      'base hook' => 'block',
-    ],
-  ];
-}
-
-/**i
  * Implements hook_entity_insert().
  */
 function chat_ai_entity_insert(EntityInterface $entity) {
@@ -110,14 +97,4 @@ function chat_ai_entity_base_field_info(EntityTypeInterface $entity_type) {
   }
 
   return $fields;
-}
-
-
-
-/**
- * Implements hook_page_attachments().
- */
-function chat_ai_page_attachments(array &$attachments) {
-  // Moved to chat ui submodule.
-  //$attachments['#attached']['library'][] = 'chat_ai/chat_ui';
 }
