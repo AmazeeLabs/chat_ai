@@ -148,7 +148,8 @@ class ChatAI {
     // @todo Load this from a .yml file.
     $context = <<<EOD
     You are a website chat bot.
-    Answer questions only under the given context. If you don't know the answer just respond with "{$default_response}".
+    Answer questions only under the given context. If the context is empty respond with "{$default_response}".
+    If you don't know the answer just respond with "{$default_response}".
 
     Context:  """
     $context
