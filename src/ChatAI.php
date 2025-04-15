@@ -129,17 +129,33 @@ class ChatAI {
   public function chat(string $question, string $context, string $langcode = NULL, array $history = []): array {
     $question = mb_convert_encoding($question, 'UTF-8');
 
+    $default_response = $this->configFactory->get('chat_ai.settings')->get('default_response') ?: $this->t('I have no idea');
+
+
+    $special_prompt_instructions = $this->configFactory->get('chat_ai.settings')->get('special_prompt_instructions') ?: '';
+    if (!empty($special_prompt_instructions)) {
+      $special_prompt_instructions = <<<EOD
+      Follow this special instructions in your response:
+      {$special_prompt_instructions}
+      EOD;
+    }
+
     // @todo
     $language = $langcode ? $this->getLanguageName($langcode) : $this->getLanguageName();
 
     // @todo Load this from a .yml file.
     $context = <<<EOD
-    You are a website chat bot. If you are unsure just respond with "I have no idea.".
+    You are a website chat bot.
+    Answer questions only under the given context. If you don't know the answer just respond with "{$default_response}".
+
     Context:  """
     $context
     """
-    Answer questions under the given context.
+
     Respond only in {$language} language.
+
+    {$special_prompt_instructions}
+
     Format your responses using simple HTML (no markdown formatting or code blocks).
     EOD;
     $model = $this->configFactory->get('chat_ai.settings')->get('model') ?: self::DEFAULT_CHAT_MODEL;
@@ -182,6 +198,7 @@ class ChatAI {
 
   /**
    * Generate a completion for the given question under the given context.
+   * Obsolete but check before deleting.
    *
    * @param string $question
    *   The question to generate a completion for.
@@ -191,7 +208,7 @@ class ChatAI {
    * @return array
    *   An array of possible completions for the question.
    */
-  public function completion(string $question, string $context): array {
+  public function completionObsolete(string $question, string $context): array {
 
     $language = \Drupal::languageManager()->getCurrentLanguage()->getName();
 
