@@ -32,10 +32,12 @@ class ChatCompletionController extends ControllerBase {
     ];
 
     $allowed_origins_settings = $this->config('chat_ai.settings')->get('allowed_origins');
-    $allowed_origins_array = array_filter(array_map('trim', explode("\n", $allowed_origins_settings)));
-    foreach ($allowed_origins_array as $origin) {
-      $parsed_origin = parse_url($origin, PHP_URL_HOST) ?: $origin;
-      $allowed_origins[] = $parsed_origin;
+    if (!empty($allowed_origins_array)) {
+      $allowed_origins_array = array_filter(array_map('trim', explode("\n", $allowed_origins_settings)));
+      foreach ($allowed_origins_array as $origin) {
+        $parsed_origin = parse_url($origin, PHP_URL_HOST) ?: $origin;
+        $allowed_origins[] = $parsed_origin;
+      }
     }
 
     \Drupal::logger('chat_ui')->debug("<pre>" .  print_r($allowed_origins, TRUE) . "</pre>");
