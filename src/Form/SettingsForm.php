@@ -120,6 +120,12 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t("Configure the allowed origin domains that this service will accept cross-origin requests from."),
     ];
 
+    $form['chat_ui_origin']['bypass_origin_checks'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Bypass origin checks'),
+      '#default_value' => $this->config('chat_ai.settings')->get('bypass_origin_checks'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -141,6 +147,7 @@ class SettingsForm extends ConfigFormBase {
       ->set('model', $form_state->getValue('model'))
       ->set('default_response', $default_response['value'])
       ->set('allowed_origins', $form_state->getValue('allowed_origins'))
+      ->set('bypass_origin_checks', $form_state->getValue('bypass_origin_checks'))
       ->set('special_prompt_instructions', $form_state->getValue('special_prompt_instructions'))
       ->save();
     parent::submitForm($form, $form_state);
