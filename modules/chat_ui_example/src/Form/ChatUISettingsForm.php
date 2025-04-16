@@ -4,6 +4,7 @@ namespace Drupal\chat_ui_example\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Configure Chat UI settings for this site.
@@ -31,8 +32,14 @@ class ChatUISettingsForm extends ConfigFormBase {
 
     $form['chat_ui'] = [
       '#type' => 'details',
-      '#title' => $this->t('Visibility'),
+      '#title' => $this->t('Visibility (backend)'),
       '#open' => TRUE,
+    ];
+
+    $form['chat_ui']['backend_visibility'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show chat UI interface on the backend'),
+      '#default_value' => $this->config('chat_ui_example.settings')->get('backend_visibility'),
     ];
 
     $form['chat_ui']['path_pages_exclude'] = [
@@ -46,10 +53,9 @@ class ChatUISettingsForm extends ConfigFormBase {
       ]),
     ];
 
-    // Add appearance settings fieldset
-    $form['appearance'] = [
+    $form['chat_ui_origin'] = [
       '#type' => 'details',
-      '#title' => $this->t('Appearance'),
+      '#title' => $this->t('Origin'),
       '#open' => TRUE,
     ];
 
@@ -63,6 +69,25 @@ class ChatUISettingsForm extends ConfigFormBase {
       ],
       '#default_value' => $this->config('chat_ui_example.settings')->get('theme_mode') ?: 'light',
       '#description' => $this->t('Select the theme mode for the chat interface.'),
+    ];
+
+    // Add appearance settings fieldset
+    $form['embed'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Code to embed'),
+      '#open' => TRUE,
+    ];
+
+    $base_url = \Drupal::request()->getSchemeAndHttpHost();
+    $code = <<<EOD
+      // Put this on the header of your website.
+      <script src="{$base_url}/chat-ui.js" type="text/javascript" />
+      EOD;
+
+    $form['embed']['code'] = [
+      '#type' => 'textarea',
+      '#default_value' => Markup::create($code),
+      '#disabled' => TRUE,
     ];
 
     return parent::buildForm($form, $form_state);
@@ -81,6 +106,7 @@ class ChatUISettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('chat_ui_example.settings')
       ->set('path_pages_exclude', $form_state->getValue('path_pages_exclude'))
+      ->set('backend_visibility', $form_state->getValue('backend_visibility'))
       ->set('theme_mode', $form_state->getValue('theme_mode'))
       ->save();
     parent::submitForm($form, $form_state);

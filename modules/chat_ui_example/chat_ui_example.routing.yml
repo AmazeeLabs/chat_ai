@@ -5,3 +5,11 @@ chat_ui_example.settings:
     _form: 'Drupal\chat_ui_example\Form\ChatUISettingsForm'
   requirements:
     _permission: "administer chat_ai configuration"
+
+chat_ui_example.serve.js:
+  path: "/chat-ui.js"
+  defaults:
+    _title: "Chat UI JS"
+    _controller: '\Drupal\chat_ui_example\Controller\ChatUiJs::serve'
+  requirements:
+    _permission: "access content"

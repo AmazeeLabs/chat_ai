@@ -5,12 +5,15 @@
  * Primary module hooks for Chat AI module.
  */
 
+use PhpParser\Node\Expr\Cast\Bool_;
+
 /**
  * Implements hook_page_attachments().
  */
 function chat_ui_example_page_attachments(array &$attachments) {
   // Load the configuration.
   $config = \Drupal::config('chat_ui_example.settings');
+  $backend_visibility = (bool) $config->get('backend_visibility');
   $excluded_paths = $config->get('path_pages_exclude');
 
   // If no excluded paths are defined, attach the library and return early.
@@ -38,7 +41,7 @@ function chat_ui_example_page_attachments(array &$attachments) {
   }
 
   // Attach the library only if the current path is not in the excluded list.
-  if (!$is_excluded) {
+  if (!$is_excluded && $backend_visibility) {
     $attachments['#attached']['library'][] = 'chat_ui_example/chat_ui_example';
   }
 }

@@ -23,14 +23,22 @@ class ChatCompletionController extends ControllerBase {
   public function complete(Request $request) {
 
     global $base_url;
-    $this->config('chat_ai.settings');
 
-    global $base_url;
+    // @todo Extract this to method.
     $allowed_origins = [
       '127.0.0.1',
       'localhost',
       parse_url($base_url, PHP_URL_HOST),
     ];
+
+    $allowed_origins_settings = $this->config('chat_ai.settings')->get('allowed_origins');
+    $allowed_origins_array = array_filter(array_map('trim', explode("\n", $allowed_origins_settings)));
+    foreach ($allowed_origins_array as $origin) {
+      $parsed_origin = parse_url($origin, PHP_URL_HOST) ?: $origin;
+      $allowed_origins[] = $parsed_origin;
+    }
+
+    \Drupal::logger('chat_ui')->debug("<pre>" .  print_r($allowed_origins, TRUE) . "</pre>");
     $origin = $request->headers->get('Origin');
 
     // If no origin header is present, fall back to client IP

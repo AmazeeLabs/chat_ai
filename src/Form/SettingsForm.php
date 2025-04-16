@@ -106,6 +106,20 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Special prompt instructions define custom guidelines or behaviors for the chatbot, influencing how it responds to user queries. These instructions help tailor the chatbot’s tone, style, and approach to better align with specific use cases or preferences.'),
     ];
 
+    // Add appearance settings fieldset
+    $form['chat_ui_origin'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Allowed origins'),
+      '#open' => TRUE,
+    ];
+
+    $form['chat_ui_origin']['allowed_origins'] = [
+      '#type' => 'textarea',
+      '#title' => '<span class="element-invisible">' . $this->t('Allowed origin domains:') . '</span>',
+      '#default_value' => $this->config('chat_ai.settings')->get('allowed_origins'),
+      '#description' => $this->t("Configure the allowed origin domains that this service will accept cross-origin requests from."),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -126,6 +140,7 @@ class SettingsForm extends ConfigFormBase {
     $this->config('chat_ai.settings')
       ->set('model', $form_state->getValue('model'))
       ->set('default_response', $default_response['value'])
+      ->set('allowed_origins', $form_state->getValue('allowed_origins'))
       ->set('special_prompt_instructions', $form_state->getValue('special_prompt_instructions'))
       ->save();
     parent::submitForm($form, $form_state);

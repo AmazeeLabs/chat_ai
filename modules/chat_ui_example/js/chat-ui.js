@@ -8,29 +8,42 @@
   // Default language
   let currentLanguage = "EN";
 
+  const languages = [
+      { code: "EN", initMessage: "Hello! How can I assist you today?" },
+      { code: "DE", initMessage: "Hallo! Wie kann ich Ihnen heute helfen?" },
+    ];
+
   // Load chat history from localStorage or initialize empty array
   let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
 
   // Chat HTML structure with language toggle
   chatContainer.innerHTML = `
-        <div class="chat-header">
-            <span>✨</span>
-            <div class="language-toggle">
-                <span class="lang-option ${currentLanguage === "EN" ? "active" : ""}" data-lang="EN">EN</span>
-                <span class="lang-option ${currentLanguage === "DE" ? "active" : ""}" data-lang="DE">DE</span>
-            </div>
-            <span class="close-btn">[X]</span>
-        </div>
-        <div class="chat-controls">
-          <span class="clear-btn">[Clear]</span>
-        </div>
-        <div class="chat-messages">
-            <div class="message system-message">Hello! How can I assist you today?</div>
-        </div>
-        <div class="chat-input-container">
-            <textarea class="chat-input" rows="1" placeholder="Type your message..."></textarea>
-            <button class="send-btn">➤</button>
-        </div>
+          <div class="chat-header">
+              <span>✨</span>
+              <div class="language-toggle">
+                  ${languages
+                    .map(
+                      (lang) =>
+                        `<span class="lang-option ${
+                          currentLanguage === lang.code ? "active" : ""
+                        }" data-lang="${lang.code}">${lang.code}</span>`,
+                    )
+                    .join("")}
+              </div>
+              <span class="close-btn">[X]</span>
+          </div>
+          <div class="chat-controls">
+            <span class="clear-btn">[Clear]</span>
+          </div>
+          <div class="chat-messages">
+              <div class="message system-message">${
+                languages.find((lang) => lang.code === currentLanguage).initMessage
+              }</div>
+          </div>
+          <div class="chat-input-container">
+              <textarea class="chat-input" rows="1" placeholder="Type your message..."></textarea>
+              <button class="send-btn">➤</button>
+          </div>
     `;
 
   const style = document.createElement("style");
@@ -344,10 +357,11 @@
       chatInput.value = "";
       chatInput.style.height = "auto";
 
+      // Note: This content will be dynamically replaced when embedded.
       try {
         const response = await fetch(
           // @todo: For decoupled websites ?
-          "/chat/completion",
+          `/chat/completion`,
           {
             method: "POST",
             headers: {
