@@ -53,7 +53,7 @@ class ChatCompletionController extends ControllerBase {
       return new JsonResponse([
         'error' => 'Unauthorized',
         'message' => 'Request origin not allowed'
-      ], 403); // 403 Forbidden status
+      ], 403);
     }
 
     $data = $request->getContent();
@@ -76,6 +76,9 @@ class ChatCompletionController extends ControllerBase {
 
     $context = \Drupal::service('chat_ai.supabase')->getMultiQueryMatchingChunks($message);
     $context = implode('\n', $context);
+
+    // Prepapre choices
+    $choices = '';
     $choices = \Drupal::service('chat_ai.service')->chat($message, $context, $langcode, $history);
     $choices = implode('<br />', $choices);
     $choices = "<p class='chat-gpt'>{$choices}</p>";
