@@ -44,15 +44,18 @@ class ChatCompletionController extends ControllerBase {
     }
 
     $origin = $request->headers->get('Origin');
+    \Drupal::logger('chat_ai')->debug($origin);
 
     // If no origin header is present, fall back to client IP
     if (!$origin) {
       $origin = $request->getClientIp();
     }
     $parsed_origin = parse_url($origin, PHP_URL_HOST) ?: $origin;
-    if (!in_array($parsed_origin, $allowed_origins)) {
+
+    $origin_allowed = in_array($parsed_origin, $allowed_origins);
+    if (!$origin_allowed) {
       \Drupal::logger('chat_ai')->debug("<pre>" . print_r($allowed_origins, TRUE) . "</pre>");
-      \Drupal::logger('chat_ai')->debug("The request origin: {$parsed_origin} is now allowed.");
+      \Drupal::logger('chat_ai')->debug("The request origin: {$parsed_origin} is not allowed.");
       if (!$bypass_origin_checks) {
         return new JsonResponse([
           'error' => 'Unauthorized',
@@ -95,7 +98,12 @@ class ChatCompletionController extends ControllerBase {
       'processed_at' => date('c'),
     ];
 
-    // Return JSON response
-    return new JsonResponse($response_data);
+    $response = new JsonResponse($response_data);
+    if ($origin_allowed && $origin) {
+      $response->headers->set('Access-Control-Allow-Origin', $origin);
+      $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+    }
+    return $response;
   }
 }
