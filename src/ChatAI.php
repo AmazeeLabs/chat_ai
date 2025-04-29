@@ -160,6 +160,9 @@ class ChatAI {
     {$special_prompt_instructions}
 
     Format your responses using simple HTML (no markdown formatting or code blocks).
+
+    Produce maximum 3 follow up questions (if possible) from a user perspective and put it at the end of the response. Each one should be inside a <span class="follow-up"></span> tag.
+
     EOD;
     $model = $this->configFactory->get('chat_ai.settings')->get('model') ?: self::DEFAULT_CHAT_MODEL;
 
@@ -286,7 +289,7 @@ class ChatAI {
       ],
     ]);
 
-    $choices = [];
+    $choices[] = $question;
     foreach ($response->choices as $result) {
       $choices[] = $result->message->content;
     }
