@@ -76,7 +76,7 @@ class ChatCompletionController extends ControllerBase {
       ], 400);
     }
 
-    $message = $input['message'];
+    $question = $input['message'];
     $langcode = $input['langcode'];
     $history = $input['history'];
 
@@ -84,12 +84,17 @@ class ChatCompletionController extends ControllerBase {
       $history = [];
     }
 
-    $context = \Drupal::service('chat_ai.supabase')->getMultiQueryMatchingChunks($message);
+    $chat_service = \Drupal::service('chat_ai.service');
+    if (!empty($history)) {
+      $question = $chat_service->transform($question, $langcode, $history);
+    }
+
+    $context = \Drupal::service('chat_ai.supabase')->getMultiQueryMatchingChunks($question);
     $context = implode('\n', $context);
 
     // Prepapre choices
     $choices = '';
-    $choices = \Drupal::service('chat_ai.service')->chat($message, $context, $langcode, $history);
+    $choices = $chat_service->chat($question, $context, $langcode, $history);
     $choices = implode('<br />', $choices);
     $choices = "<p class='chat-gpt'>{$choices}</p>";
 

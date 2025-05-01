@@ -268,6 +268,7 @@ class ChatAI {
    */
   public function getMultiQuery(string $question): array {
     $question = mb_convert_encoding($question, 'UTF-8');
+
     $language = \Drupal::languageManager()->getCurrentLanguage()->getName();
     $chat_request = <<<EOD
     You are an AI language model assistant.
@@ -319,4 +320,72 @@ class ChatAI {
 
     return $manager->getCurrentLanguage()->getName();
   }
+
+
+  /**
+   * Transforms a user question to make it more complete and self-contained.
+   *
+   * This method enhances a question to improve its effectiveness in similarity search
+   * by sending it to the configured AI model. The transformation keeps the original
+   * meaning but makes the question more comprehensive.
+   *
+   * @param string $question
+   *   The original user question to be transformed.
+   * @param string|null $langcode
+   *   The language code in which the response should be provided.
+   *   If NULL, the default language will be used.
+   * @param array $history
+   *   An array of conversation history items, each containing 'user' and 'assistant' keys
+   *   representing previous exchanges in the conversation.
+   *
+   * @return mixed
+   *   The transformed question string, or NULL if the transformation failed.
+   */
+  public function transform(string $question, string $langcode = NULL, array $history = []): mixed {
+
+    $question = mb_convert_encoding($question, 'UTF-8');
+    $language = $langcode ? $this->getLanguageName($langcode) : $this->getLanguageName();
+    $context = <<<EOD
+    We need to enrich a user question to improve its effectiveness in a similarity search.
+    Given the following context, enhance the user's question to make it more complete and self-contained.
+    Do not change the meaning of the original question.
+
+    Original Question: $question
+
+    Respond only in {$language}. Ouput only the improved question and nothing else.
+    EOD;
+    $model = $this->configFactory->get('chat_ai.settings')->get('model') ?: self::DEFAULT_CHAT_MODEL;
+
+    if (!empty($history)) {
+      foreach ($history as $history_item) {
+        $messages[] = [
+          'role' => 'user',
+          'content' => $history_item['user'],
+        ];
+
+        $messages[] = [
+          'role' => 'assistant',
+          'content' => $history_item['assistant'],
+        ];
+      }
+    }
+
+    $messages[] = [
+      'role' => 'system',
+      'content' => $context,
+    ];
+
+    $response = $this->client->chat()->create([
+      'model' => $model,
+      'messages' => $messages,
+    ]);
+
+    $choices = [];
+    foreach ($response->choices as $result) {
+      $choices[] = $result->message->content;
+    }
+
+    return $choices[0];
+  }
+
 }
