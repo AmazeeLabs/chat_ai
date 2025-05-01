@@ -44,7 +44,6 @@ class ChatCompletionController extends ControllerBase {
     }
 
     $origin = $request->headers->get('Origin');
-    \Drupal::logger('chat_ai')->debug($origin);
 
     // If no origin header is present, fall back to client IP
     if (!$origin) {
@@ -54,8 +53,11 @@ class ChatCompletionController extends ControllerBase {
 
     $origin_allowed = in_array($parsed_origin, $allowed_origins);
     if (!$origin_allowed) {
+
+      // Debug
       \Drupal::logger('chat_ai')->debug("<pre>" . print_r($allowed_origins, TRUE) . "</pre>");
       \Drupal::logger('chat_ai')->debug("The request origin: {$parsed_origin} is not allowed.");
+
       if (!$bypass_origin_checks) {
         return new JsonResponse([
           'error' => 'Unauthorized',

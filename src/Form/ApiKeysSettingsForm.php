@@ -31,18 +31,29 @@ class ApiKeysSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $api_key_ai_contributed = NULL;
+    if (\Drupal::service('key.repository')->getKey('openai')) {
+      $api_key_ai_contributed = \Drupal::service('key.repository')->getKey('openai')->getKeyValue();
+    }
+
     $form['open_ai'] = [
       '#type' => 'details',
       '#title' => $this->t('OpenAI credentials'),
       '#open' => TRUE,
     ];
 
+
     $form['open_ai']['api_key'] = [
       '#required' => FALSE,
       '#type' => 'textarea',
       '#title' => $this->t('API Key'),
-      '#default_value' => $this->config('chat_ai.settings')->get('api_key'),
-      '#description' => $this->t('The API key from <a href="@link" target="_blank">OpenAI</a>.', ['@link' => 'https://openai.com/api']),
+      '#default_value' => $this->maskString($api_key_ai_contributed) ?? $this->config('chat_ai.settings')->get('api_key'),
+      '#description' => $api_key_ai_contributed ?
+        $this->t('The API KEY from the contributed <strong><a href="@url">AI module</a></strong> is used.', [
+          '@url' => '/admin/config/ai/settings',
+        ])
+        : $this->t('The API key from <a href="@link" target="_blank">OpenAI</a>.', ['@link' => 'https://openai.com/api']),
+      '#disabled' => $api_key_ai_contributed,
     ];
 
     $form['open_ai']['api_org'] = [
@@ -128,4 +139,16 @@ class ApiKeysSettingsForm extends ConfigFormBase {
       ->save();
     parent::submitForm($form, $form_state);
   }
+
+
+  private function maskString($str) {
+      if (strlen($str) <= 20) return $str;
+      $firstTen = substr($str, 0, 10);
+      $lastTen = substr($str, -10);
+      $middleLen = strlen($str) - 20;
+      $middle = str_repeat('.', $middleLen);
+      return $firstTen . $middle . $lastTen;
+  }
+
+
 }

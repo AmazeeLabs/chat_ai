@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SettingsForm extends ConfigFormBase {
 
   private const DEFAULT_MODEL = 'gpt-4o-mini';
+  private const OPEN_AI = 'openai';
 
   /**
    * {@inheritdoc}
@@ -72,9 +73,20 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Select chat model:'),
       '#options' => $this->getGptModels(),
-      '#default_value' => $this->config('chat_ai.settings')->get('model') ?: self::DEFAULT_MODEL,
+      '#default_value' => $this->getDefaultModel(),
       '#required' => TRUE,
+      '#disabled' => $this->getAiContributedDefaultModel(),
     ];
+
+    if ($this->getAiContributedDefaultModel()) {
+      $form['container']['default_model_info'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('The chat model from <strong><a href="@url">AI settings</a></strong> is used.', [
+          '@url' => '/admin/config/ai/settings',
+        ]),
+        '#suffix' => '<p></p>',
+      ];
+    }
 
     $form['container']['info'] = [
       '#type' => 'markup',
@@ -186,4 +198,40 @@ class SettingsForm extends ConfigFormBase {
 
     return $options;
   }
+
+  /**
+   * Gets the default model for chat AI.
+   *
+   * If a default chat provider is configured with OpenAI as the provider,
+   * uses that model ID otheriwse use Chat AI settings.
+   * Otherwise, falls back to the class's DEFAULT_MODEL constant.
+   *
+   * @return string
+   *   The default model ID to use for chat AI.
+   */
+  private function getDefaultModel() {
+    $default_model = $this->config('chat_ai.settings')->get('model') ?: self::DEFAULT_MODEL;
+    return $this->getAiContributedDefaultModel() ?? $default_model;
+  }
+
+
+  /**
+   * Gets the default model for chat AI.
+   *
+   * Checks the AI module's default providers configuration.
+   * Returns the model ID if a default chat provider is configured with OpenAI.
+   * Otherwise, returns NULL.
+   *
+   * @return string|null
+   *   The default AI model ID for chat AI or NULL.
+   */
+  private function getAiContributedDefaultModel(): ?string {
+      $default_providers = $this->config('ai.settings')->get('default_providers') ?? [];
+      $chat_provider = $default_providers['chat'] ?? [];
+
+      return ($chat_provider && $chat_provider['provider_id'] === self::OPEN_AI)
+          ? $chat_provider['model_id']
+          : NULL;
+  }
+
 }
