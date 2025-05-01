@@ -120,7 +120,8 @@ class Supabase {
       ]);
       $status = $response->getStatusCode();
       return $status == 200 ? TRUE : $status;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       return FALSE;
     }
   }
@@ -220,7 +221,7 @@ class Supabase {
     $response = $this->supabase->delete('documents', [
       'query' => [
         'id' => 'gt.0',
-        'entity_type' => 'neq.file'
+        'entity_type' => 'neq.file',
       ],
     ]);
     return $response->getBody()->getContents();
@@ -287,11 +288,14 @@ class Supabase {
    * This function takes a query string, splits it into multiple sub-queries using
    * the chat_ai service, and finds matching chunks for each sub-query.
    *
-   * @param string $query The input query to be processed.
-   * @param float $match_threshold The minimum threshold for considering a match.
-   *                              Defaults to self::MATCH_THRESHOLD.
-   * @param int $match_count The maximum number of matches to return.
-   *                        Defaults to self::MATCH_COUNT.
+   * @param string $query
+   *   The input query to be processed.
+   * @param float $match_threshold
+   *   The minimum threshold for considering a match.
+   *   Defaults to self::MATCH_THRESHOLD.
+   * @param int $match_count
+   *   The maximum number of matches to return.
+   *   Defaults to self::MATCH_COUNT.
    *
    * @return array An array of unique matching chunks across all sub-queries.
    *
@@ -318,4 +322,5 @@ class Supabase {
     $flattened = array_merge(...array_values($chunks));
     return array_unique($flattened);
   }
+
 }

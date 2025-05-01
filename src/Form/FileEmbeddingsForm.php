@@ -105,7 +105,6 @@ final class FileEmbeddingsForm extends FormBase {
         ],
       ];
       // \Drupal::service('renderer')->renderRoot($form['actions']['open_modal']);
-
       $form['files_table'][$file->id()] = [
         'name' => $link,
         'size' => [
@@ -221,7 +220,8 @@ final class FileEmbeddingsForm extends FormBase {
 
     if ($success) {
       $messenger->addMessage(t('Successfully processed @count chunks.', ['@count' => $results['processed']]));
-    } else {
+    }
+    else {
       $messenger->addError(t('An error occurred while processing files.'));
     }
 
@@ -250,4 +250,5 @@ final class FileEmbeddingsForm extends FormBase {
     }
     return $files;
   }
+
 }

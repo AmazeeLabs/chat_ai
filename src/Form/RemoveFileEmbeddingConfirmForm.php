@@ -37,11 +37,11 @@ class RemoveFileEmbeddingConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, File $file = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?File $file = NULL) {
     $form = parent::buildForm($form, $form_state);
     $form['description']['info'] = [
       '#markup' => $this->t('<p>This action instructs the chatbot to remove the file <p><em><strong>@name</strong></em></p> from its knowledge base, ensuring that the information contained within is no longer accessible or referenced in future interactions.</p>', [
-        '@name' => $file->getFilename()
+        '@name' => $file->getFilename(),
       ]),
     ];
 
@@ -65,4 +65,5 @@ class RemoveFileEmbeddingConfirmForm extends ConfirmFormBase {
     $this->messenger()->addStatus($this->t('File removed successfully from the chatbot knowledge base.'));
     $form_state->setRedirectUrl(new Url('chat_ai.file_embeddings'));
   }
+
 }

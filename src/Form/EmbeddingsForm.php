@@ -435,7 +435,8 @@ class EmbeddingsForm extends ConfigFormBase {
         'One entity processed.',
         '@count entities added to the indexing queue.'
       );
-    } else {
+    }
+    else {
       $message = t('Finished with an error.');
     }
     \Drupal::messenger()->addStatus($message);
@@ -473,9 +474,11 @@ class EmbeddingsForm extends ConfigFormBase {
         'One entity processed.',
         '@count entities processed.'
       );
-    } else {
+    }
+    else {
       $message = t('Finished with an error.');
     }
     \Drupal::messenger()->addStatus($message);
   }
+
 }

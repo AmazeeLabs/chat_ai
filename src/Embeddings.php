@@ -9,7 +9,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\chat_ai\Http\OpenAiClientFactory;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\file\Entity\File;
@@ -614,7 +613,8 @@ class Embeddings {
 
       if (method_exists($entity, 'isPublished')) {
         $published = $entity->isPublished();
-      } else {
+      }
+      else {
         // @todo Revise this, custom entities may have a custom logic
         $published = method_exists($entity, 'hasField')  &&  $entity->hasField('status') && $entity->status->value;
       }
@@ -633,7 +633,8 @@ class Embeddings {
    * a delimiter. It also filters out chunks larger than 1000 characters as a
    * workaround to remove large sections like menus and hidden items.
    *
-   * @param File $file The file to process
+   * @param \Drupal\file\Entity\File $file
+   *   The file to process.
    *
    * @return array Array of document chunks, each smaller than 1000 characters
    */
@@ -660,10 +661,11 @@ class Embeddings {
    *
    * @todo Add dependency injection and refactor this initial prototype
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity The Drupal entity to process
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The Drupal entity to process.
    *
    * @return array Array of document chunks, each smaller than 1000 characters,
-   *               or empty array if content fetching fails
+   *   or empty array if content fetching fails
    */
   public function documentSplitter(ContentEntityInterface $entity) {
     // @todo Add DI, refactor (note: this is an initial working prototype)
@@ -755,4 +757,5 @@ class Embeddings {
     $queue = \Drupal::queue($queue_name);
     return $queue->deleteQueue();
   }
+
 }

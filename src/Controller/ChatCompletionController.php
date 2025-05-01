@@ -45,7 +45,7 @@ class ChatCompletionController extends ControllerBase {
 
     $origin = $request->headers->get('Origin');
 
-    // If no origin header is present, fall back to client IP
+    // If no origin header is present, fall back to client IP.
     if (!$origin) {
       $origin = $request->getClientIp();
     }
@@ -54,14 +54,14 @@ class ChatCompletionController extends ControllerBase {
     $origin_allowed = in_array($parsed_origin, $allowed_origins);
     if (!$origin_allowed) {
 
-      // Debug
+      // Debug.
       \Drupal::logger('chat_ai')->debug("<pre>" . print_r($allowed_origins, TRUE) . "</pre>");
       \Drupal::logger('chat_ai')->debug("The request origin: {$parsed_origin} is not allowed.");
 
       if (!$bypass_origin_checks) {
         return new JsonResponse([
           'error' => 'Unauthorized',
-          'message' => 'Request origin not allowed'
+          'message' => 'Request origin not allowed',
         ], 403);
       }
     }
@@ -69,7 +69,7 @@ class ChatCompletionController extends ControllerBase {
     $data = $request->getContent();
     $input = json_decode($data, TRUE);
 
-    // Validate required parameters
+    // Validate required parameters.
     if (!isset($input['message']) || !isset($input['langcode'])) {
       return new JsonResponse([
         'error' => 'Missing required parameters: message and langcode are required',
@@ -92,7 +92,7 @@ class ChatCompletionController extends ControllerBase {
     $context = \Drupal::service('chat_ai.supabase')->getMultiQueryMatchingChunks($question);
     $context = implode('\n', $context);
 
-    // Prepapre choices
+    // Prepapre choices.
     $choices = '';
     $choices = $chat_service->chat($question, $context, $langcode, $history);
     $choices = implode('<br />', $choices);
@@ -113,4 +113,5 @@ class ChatCompletionController extends ControllerBase {
     }
     return $response;
   }
+
 }

@@ -42,16 +42,15 @@ class ApiKeysSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-
     $form['open_ai']['api_key'] = [
       '#required' => FALSE,
       '#type' => 'textarea',
       '#title' => $this->t('API Key'),
       '#default_value' => $this->maskString($api_key_ai_contributed) ?? $this->config('chat_ai.settings')->get('api_key'),
       '#description' => $api_key_ai_contributed ?
-        $this->t('The API KEY from the contributed <strong><a href="@url">AI module</a></strong> is used.', [
-          '@url' => '/admin/config/ai/settings',
-        ])
+      $this->t('The API KEY from the contributed <strong><a href="@url">AI module</a></strong> is used.', [
+        '@url' => '/admin/config/ai/settings',
+      ])
         : $this->t('The API key from <a href="@link" target="_blank">OpenAI</a>.', ['@link' => 'https://openai.com/api']),
       '#disabled' => $api_key_ai_contributed,
     ];
@@ -119,7 +118,8 @@ class ApiKeysSettingsForm extends ConfigFormBase {
     try {
       $client = \OpenAI::client($form_state->getValue('api_key'));
       $client->models()->list();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $this->messenger()->addError($e->getMessage());
       $form_state->setErrorByName('api_key');
     }
@@ -140,15 +140,18 @@ class ApiKeysSettingsForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
   }
 
-
+  /**
+   *
+   */
   private function maskString($str) {
-      if (strlen($str) <= 20) return $str;
-      $firstTen = substr($str, 0, 10);
-      $lastTen = substr($str, -10);
-      $middleLen = strlen($str) - 20;
-      $middle = str_repeat('.', $middleLen);
-      return $firstTen . $middle . $lastTen;
+    if (strlen($str) <= 20) {
+      return $str;
+    }
+    $firstTen = substr($str, 0, 10);
+    $lastTen = substr($str, -10);
+    $middleLen = strlen($str) - 20;
+    $middle = str_repeat('.', $middleLen);
+    return $firstTen . $middle . $lastTen;
   }
-
 
 }

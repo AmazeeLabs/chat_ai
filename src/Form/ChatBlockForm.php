@@ -8,7 +8,6 @@ use Drupal\Core\Ajax\FocusFirstCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Markup;
 use Drupal\chat_ai\Embeddings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -109,7 +108,6 @@ class ChatBlockForm extends FormBase {
       ],
     ];
 
-
     $form['#attached']['library'][] = 'chat_ai/chat_ai';
     $form['#attached']['library'][] = 'core/drupal.ajax';
     return $form;
@@ -151,7 +149,8 @@ class ChatBlockForm extends FormBase {
 
     if (is_array($history) && !empty($history) && $use_history) {
       $choices = reset($history);
-    } else {
+    }
+    else {
       $context = \Drupal::service('chat_ai.supabase')->getMultiQueryMatchingChunks($message);
       $context = implode('\n', $context);
       // $choices = \Drupal::service('chat_ai.service')->completion($message, $context);
@@ -169,4 +168,5 @@ class ChatBlockForm extends FormBase {
     $response->addCommand(new FocusFirstCommand('#edit-message'));
     return $response;
   }
+
 }

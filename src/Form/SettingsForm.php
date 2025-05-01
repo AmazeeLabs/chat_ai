@@ -2,7 +2,6 @@
 
 namespace Drupal\chat_ai\Form;
 
-use Drupal\node\Entity\Node;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\chat_ai\Http\OpenAiClientFactory;
@@ -118,7 +117,7 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Special prompt instructions define custom guidelines or behaviors for the chatbot, influencing how it responds to user queries. These instructions help tailor the chatbot’s tone, style, and approach to better align with specific use cases or preferences.'),
     ];
 
-    // Add appearance settings fieldset
+    // Add appearance settings fieldset.
     $form['chat_ui_origin'] = [
       '#type' => 'details',
       '#title' => $this->t('Allowed origins'),
@@ -175,7 +174,8 @@ class SettingsForm extends ConfigFormBase {
 
     try {
       $models = $this->client->models()->list();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // @todo
       $this->messenger()->addError($this->t('Please configure your Open AI API key.'));
       return [];
@@ -214,7 +214,6 @@ class SettingsForm extends ConfigFormBase {
     return $this->getAiContributedDefaultModel() ?? $default_model;
   }
 
-
   /**
    * Gets the default model for chat AI.
    *
@@ -226,10 +225,10 @@ class SettingsForm extends ConfigFormBase {
    *   The default AI model ID for chat AI or NULL.
    */
   private function getAiContributedDefaultModel(): ?string {
-      $default_providers = $this->config('ai.settings')->get('default_providers') ?? [];
-      $chat_provider = $default_providers['chat'] ?? [];
+    $default_providers = $this->config('ai.settings')->get('default_providers') ?? [];
+    $chat_provider = $default_providers['chat'] ?? [];
 
-      return ($chat_provider && $chat_provider['provider_id'] === self::OPEN_AI)
+    return ($chat_provider && $chat_provider['provider_id'] === self::OPEN_AI)
           ? $chat_provider['model_id']
           : NULL;
   }

@@ -41,4 +41,5 @@ class EmbeddingsQueue extends QueueWorkerBase {
       '@label' => $entity->language()->getId(),
     ]));
   }
+
 }
